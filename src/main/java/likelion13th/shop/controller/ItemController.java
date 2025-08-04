@@ -1,4 +1,3 @@
-// ItemController.java
 // 상품 CRUD API를 제공하며, Swagger 문서화 및 통일된 응답 포맷 적용
 
 package likelion13th.shop.controller;

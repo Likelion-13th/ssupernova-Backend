@@ -1,4 +1,3 @@
-// CategoryRepository.java
 // JPA 기반으로 Category 테이블에 대한 CRUD 메서드 자동 제공
 
 package likelion13th.shop.repository;

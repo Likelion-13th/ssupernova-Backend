@@ -42,12 +42,22 @@ public class Item extends BaseEntity {
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
-    //Order과 일대다 연관관계 설정
+    /**
+     * 주문과의 일대다 관계 설정
+     * - 하나의 상품은 여러 주문에 포함될 수 있음
+     * - Order.item 필드에 의해 매핑
+     * - cascade = ALL: 상품 삭제 시 연결된 주문도 삭제됨
+     * - @JsonIgnore: 순환참조 방지
+     */
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-    public Item(String item_name, int price, String thumbnail_img, String brand, boolean isNew) {
+    /**
+     * 커스텀 생성자
+     * - 일부 필드만 받아 초기화할 때 사용
+     */
+    public Item(String item_name, int price, String imagePath, String brand, boolean isNew) {
         this.item_name = item_name;
         this.price = price;
         this.imagePath = imagePath;

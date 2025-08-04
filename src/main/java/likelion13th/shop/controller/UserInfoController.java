@@ -1,4 +1,3 @@
-// UserInfoController.java
 // 사용자 정보 조회 API를 제공하며, Swagger 문서화 및 통일된 응답 포맷 적용
 
 package likelion13th.shop.controller;
@@ -26,9 +25,12 @@ public class UserInfoController {
     private final UserService userService;
     private final UserAddressService userAddressService;
 
-    // 내 프로필 정보 조회
+    /**
+     * 로그인한 사용자의 기본 프로필 정보를 조회
+     * - 닉네임, 주소, 최근 결제 금액 등 포함
+     */
     @GetMapping("/profile")
-    @Operation(summary = "내 정보 조회", description = "로그인한 사용자의 닉네임, 전화번호를 조회합니다.")
+    @Operation(summary = "내 정보 조회", description = "로그인한 사용자의 기본 프로필 정보를 조회합니다.")
     public ApiResponse<?> getUserProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
         UserInfoResponse response = userService.getUserInfo(userDetails.getUser());
         return ApiResponse.onSuccess(SuccessCode.USER_INFO_GET_SUCCESS, response);

@@ -1,4 +1,3 @@
-// Category.java
 // 카테고리 정보를 저장하는 JPA Entity 클래스
 // 상품 분류 목적의 단일 테이블 구조이며, item-category 연관관계는 별도 테이블로 관리
 
@@ -31,4 +30,6 @@ public class Category extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "item_id") // 상대 엔티티의 외래 키
     )
     private List<Item> items = new ArrayList<>(); // 연관된 상품 목록
+
+
 }

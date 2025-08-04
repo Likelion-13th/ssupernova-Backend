@@ -12,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+
+/**
+ * 사용자 주소 정보를 조회 및 수정하는 서비스 클래스
+ * - 사용자 인증 정보(CustomUserDetails)를 바탕으로 주소를 가져오거나 변경
+ */
 public class UserAddressService {
 
     private final UserRepository userRepository;
@@ -19,11 +24,7 @@ public class UserAddressService {
     // 주소 응답 생성
     public AddressResponse getUserAddress(User user) {
         var address = user.getAddress();
-        return new AddressResponse(
-                address.getZipcode(),
-                address.getAddress(),
-                address.getAddressDetail()
-        );
+        return AddressResponse.from(user.getAddress());
     }
 
     // 내 주소 수정
