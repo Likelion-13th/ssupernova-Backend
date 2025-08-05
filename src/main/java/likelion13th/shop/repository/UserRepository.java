@@ -12,9 +12,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // user_id 기반 사용자 찾기 (feature/4)
     Optional<User> findById(Long userId);
 
+    // user_id 존재 여부 확인
     boolean existsById(Long userId);
 
     // providerId(카카오 고유 ID) 기반 조회 (feature/4)
+    // → OAuth 로그인 식별자로 사용됨
     Optional<User> findByProviderId(String providerId);
 
     boolean existsByProviderId(String providerId);
@@ -24,4 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 향후 필요 시 사용할 수 있도록 주석 유지
     //Optional<User> findByKakaoId(String kakaoId);
+
 }
+
+// 사용자 인증 및 조회를 위한 Repository
+// providerId, nickname 등 다양한 조건으로 사용자 검색 가능
+

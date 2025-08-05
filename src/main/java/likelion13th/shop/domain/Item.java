@@ -23,20 +23,20 @@ public class Item extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String item_name;
+    private String item_name; // 상품 이름
 
     @Column(nullable = false)
-    private int price;
+    private int price; // 상품 가격
 
     @Column(nullable = false)
-    private String imagePath;
+    private String imagePath; // 이미지 경로
 
     @Column(nullable = false)
-    private String brand;
+    private String brand; // 브랜드명
 
     @Column(nullable = false)
     @Setter
-    private boolean isNew= false;
+    private boolean isNew= false; // 신상품 여부
 
     //Category와 다대다 연관관계 설정
     @ManyToMany(mappedBy = "items")
@@ -64,4 +64,9 @@ public class Item extends BaseEntity {
         this.brand = brand;
         this.isNew= false;
     }
+
+    // → 상품 정보, 카테고리 및 주문 연관관계를 포함한 도메인 엔티티
+    // → 상품 등록/조회 시 필요한 기본 구조를 제공함
 }
+// 상품 정보와 관련 연관관계를 정의한 JPA 엔티티
+// 카테고리와 다대다, 주문과 일대다 관계 설정

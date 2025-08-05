@@ -1,5 +1,3 @@
-// 상품 정보를 응답할 때 사용하는 DTO
-
 package likelion13th.shop.DTO.response;
 
 import likelion13th.shop.domain.Item;
@@ -30,3 +28,7 @@ public class ItemResponse {
         );
     }
 }
+
+// Item 엔티티에서 필요한 정보만 추려 응답할 때 사용하는 DTO
+// 정적 메서드 from()으로 변환 로직을 통일함
+

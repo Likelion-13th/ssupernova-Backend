@@ -12,3 +12,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i JOIN i.categories c WHERE c.id = :categoryId")
     List<Item> findAllByCategoryId(Long categoryId);
 }
+// 상품 엔티티에 대한 CRUD 및 커스텀 조회 기능 제공
+// 카테고리 ID로 상품을 조회하는 JPQL 쿼리 포함

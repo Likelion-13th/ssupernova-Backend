@@ -32,6 +32,7 @@ public class UserInfoController {
     @GetMapping("/profile")
     @Operation(summary = "내 정보 조회", description = "로그인한 사용자의 기본 프로필 정보를 조회합니다.")
     public ApiResponse<?> getUserProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        // → SecurityContext에서 현재 로그인된 사용자 정보 주입받음
         UserInfoResponse response = userService.getUserInfo(userDetails.getUser());
         return ApiResponse.onSuccess(SuccessCode.USER_INFO_GET_SUCCESS, response);
     }
@@ -40,6 +41,7 @@ public class UserInfoController {
     @GetMapping("/mileage")
     @Operation(summary = "내 마일리지 조회", description = "로그인한 사용자의 마일리지를 조회합니다.")
     public ApiResponse<?> getMileage(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        // → 현재 사용자 기준으로 마일리지 정보만 추출
         UserMileageResponse response = userService.getUserMileage(userDetails.getUser());
         return ApiResponse.onSuccess(SuccessCode.USER_MILEAGE_GET_SUCCESS, response);
     }
@@ -48,7 +50,13 @@ public class UserInfoController {
     @GetMapping("/address")
     @Operation(summary = "내 주소 조회", description = "로그인한 사용자의 주소 정보를 조회합니다.")
     public ApiResponse<?> getAddress(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        // → 내장된 Address 객체를 응답용 DTO로 가공해 반환
         AddressResponse response = userAddressService.getUserAddress(userDetails.getUser());
         return ApiResponse.onSuccess(SuccessCode.ADDRESS_GET_SUCCESS, response);
     }
+    // → @AuthenticationPrincipal로 로그인 사용자 정보 주입
+    // → Swagger 문서화 및 ApiResponse 응답 통일 구조 적용
 }
+// 로그인한 사용자의 프로필, 마일리지, 주소 정보를 조회하는 컨트롤러
+// Spring Security와 Swagger를 적용해 일관된 구조로 설계
+

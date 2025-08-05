@@ -1,10 +1,13 @@
-// JPA 기반으로 Category 테이블에 대한 CRUD 메서드 자동 제공
-
 package likelion13th.shop.repository;
 
 import likelion13th.shop.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    // 별도 쿼리 없이도 save(), findAll(), findById() 등 기본 메서드 사용 가능
+    // → Spring Data JPA가 save, findAll, findById, delete 등 자동 구현
+    // → 쿼리 작성 없이도 CRUD 처리 가능, 유지보수 용이
 }
+
+// 카테고리 CRUD를 위한 JPA Repository 인터페이스
+// 기본 메서드는 JpaRepository에서 자동 제공
+
