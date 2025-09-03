@@ -1,39 +1,41 @@
 package likelion13th.shop.DTO.response;
 
+import likelion13th.shop.domain.Order;
 import likelion13th.shop.domain.User;
+import likelion13th.shop.global.constant.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Getter
 @AllArgsConstructor
-
-/**
- * 사용자 정보를 클라이언트에게 응답할 때 사용하는 DTO
- * - 닉네임, 주소 정보, 총 결제 금액 등 표시
- */
 public class UserInfoResponse {
-    private String nickname;     // 사용자 닉네임 (usernickname)
-    private String zipcode;      // 우편번호
-    private String address;      // 기본 주소
-    private String addressDetail;   // 상세 주소
-    private int recentTotal;        // 최근 총 결제 금액
+    private String usernickname;
+    private int recentTotal;
+    private int maxMileage;
+    private Map<OrderStatus, Integer> orderStatusCounts; // 각 상태별 주문 개수
 
-    /**
-     * User 엔티티를 UserInfoResponse DTO로 변환하는 정적 메서드
-     * → 사용자 정보 중 필요한 필드만 추려 클라이언트에 전달
-     */
     public static UserInfoResponse from(User user) {
+        // 각 상태별 주문 개수 계산
+        Map<OrderStatus, Integer> orderStatusCounts = user.getOrders().stream()
+                .collect(Collectors.groupingBy(
+                        Order::getStatus,
+                        Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
+                ));
+
+        // PROCESSING, COMPLETE, CANCEL 상태가 없는 경우 0으로 초기화
+        orderStatusCounts.putIfAbsent(OrderStatus.PROCESSING, 0);
+        orderStatusCounts.putIfAbsent(OrderStatus.COMPLETE, 0);
+        orderStatusCounts.putIfAbsent(OrderStatus.CANCEL, 0);
+
         return new UserInfoResponse(
                 user.getUsernickname(),
-                user.getAddress().getZipcode(),
-                user.getAddress().getAddress(),
-                user.getAddress().getAddressDetail(),
-                user.getRecentTotal()
+                user.getRecentTotal(),
+                user.getMaxMileage(),
+                orderStatusCounts
         );
     }
-
-    // → User 엔티티로부터 응답에 필요한 데이터만 구성
 }
-// User 엔티티를 클라이언트 응답 형태로 변환하는 DTO
-// 닉네임, 주소, 결제 금액 등 사용자 핵심 정보만 전달
-

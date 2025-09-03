@@ -10,7 +10,6 @@ import likelion13th.shop.login.auth.jwt.CustomUserDetails;
 import likelion13th.shop.login.service.UserService;
 import likelion13th.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +18,11 @@ import java.util.List;
 
 
 @Tag(name = "주문", description = "주문 관련 API 입니다.")
-@Slf4j
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    // private final UserService userService;
 
     /** 주문 생성 **/
     @PostMapping
@@ -34,12 +31,9 @@ public class OrderController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody OrderCreateRequest request
     ) {
-        OrderResponse newOrder = orderService.createOrder(request, customUserDetails.getUser());
+        OrderResponse newOrder = orderService.createOrder(request, customUserDetails);
         return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
     }
-
-
-
 
     /** 모든 주문 목록 조회 **/
     @GetMapping
@@ -47,8 +41,7 @@ public class OrderController {
     public ApiResponse<?> getAllOrders(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        List<OrderResponse> orders = orderService.getAllOrders(customUserDetails.getUser());
-
+        List<OrderResponse> orders = orderService.getAllOrders(customUserDetails);
         // 주문이 없더라도 성공 응답 + 빈 리스트 반환
         if (orders.isEmpty()) {
             return ApiResponse.onSuccess(SuccessCode.ORDER_LIST_EMPTY, Collections.emptyList());

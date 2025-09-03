@@ -1,34 +1,38 @@
 package likelion13th.shop.DTO.response;
 
+
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import likelion13th.shop.domain.Item;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ItemResponse {
     private Long id;
-    private String itemName;
+    private String name;
     private int price;
-    private String imagePath;
     private String brand;
+    private String imagePath;
     private boolean isNew;
 
-    /**
-     * Item 엔티티를 ItemResponse DTO로 변환하는 정적 메서드
-     */
+    @JsonProperty("isNew")
+    public boolean getIsNew() {
+        return isNew;
+    }
+
+    // Item → ItemResponseDto 변환
     public static ItemResponse from(Item item) {
         return new ItemResponse(
                 item.getId(),
-                item.getItem_name(),
+                item.getItemName(),
                 item.getPrice(),
-                item.getImagePath(),
                 item.getBrand(),
+                item.getImagePath(),
                 item.isNew()
         );
     }
 }
-
-// Item 엔티티에서 필요한 정보만 추려 응답할 때 사용하는 DTO
-// 정적 메서드 from()으로 변환 로직을 통일함
-
