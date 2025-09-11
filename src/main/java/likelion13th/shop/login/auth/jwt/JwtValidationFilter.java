@@ -9,6 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+// Authorization: Beare <token> 검사 -> 유효 시 SercurityContext 세팅
 @Component
 public class JwtValidationFilter extends OncePerRequestFilter {
     @Override

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+// 카카오 인증 성공 시 신규 유저 생성(없으면) -> jwt 발급/저장
+// 허용된 목록, 지정된 곳으로만 redirect
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
