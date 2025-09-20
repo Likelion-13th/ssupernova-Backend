@@ -1,74 +1,92 @@
 package likelion13th.shop.login.auth.jwt;
 
+import likelion13th.shop.domain.Address;
 import likelion13th.shop.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * Spring Security에서 사용되는 사용자 정보 객체.
- * 로그인한 사용자 정보를 보관하며, @AuthenticationPrincipal로 주입 가능
- */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-    private final User user;           // 🔹 User 객체 전체 보관
-    private final Long id;             // User 엔티티의 id
-    private final String providerId;   // 카카오 고유 ID
+    private Long userId;
+    private String providerId;
+    private String usernickname;
+    private Address address;
+
+    private Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
-        this.user = user;
-        this.id = user.getId();
+        this.userId = user.getId();
         this.providerId = user.getProviderId();
+        this.usernickname = user.getUsernickname();
+        this.address = user.getAddress();
+        this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    /** 🔹 User 객체 반환 */
-    public User getUser() {
-        return this.user;
+    public CustomUserDetails(String providerId, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.providerId = providerId;
+        this.userId = null;
+        this.usernickname = null;
+        this.authorities = authorities;
+        this.address = null;
     }
 
-    /** 인증 시 사용되는 username → 우리는 providerId 사용 **/
+    public static CustomUserDetails fromEntity(User entity) {
+        return CustomUserDetails.builder()
+                .userId(entity.getId())
+                .providerId(entity.getProviderId())
+                .usernickname(entity.getUsernickname())
+                .address(entity.getAddress())
+                .build();
+    }
+
+    public User toEntity() {
+        return User.builder()
+                .id(this.userId)
+                .providerId(this.providerId)
+                .usernickname(this.usernickname)
+                .address(this.address)
+                .build();
+    }
+
     @Override
     public String getUsername() {
         return this.providerId;
     }
 
-    /** 패스워드는 사용하지 않음 (OAuth 기반) **/
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    /** 기본 권한 (필요 시 Role 로직 확장 가능) **/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // ex) ROLE_USER 등
+        if (this.authorities != null && !this.authorities.isEmpty()) {
+            return this.authorities;
+        }
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    /** 계정 만료 여부 (true = 만료되지 않음) **/
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public String getPassword() {
+        return "";
     }
 
-    /** 계정 잠김 여부 **/
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
-    /** 자격 증명 만료 여부 **/
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+    public boolean isAccountNonLocked() { return true; }
 
-    /** 계정 활성화 여부 **/
     @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return true; }
 }
